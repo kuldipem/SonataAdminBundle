@@ -1,17 +1,19 @@
 <?php
 
 /*
- * This file is part of the Sonata package.
+ * This file is part of the Sonata Project package.
  *
  * (c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
- *
  */
 
 namespace Sonata\AdminBundle\Form\Type;
 
+use Doctrine\Common\Collections\Collection;
+use Sonata\AdminBundle\Admin\AdminInterface;
+use Sonata\AdminBundle\Admin\FieldDescriptionInterface;
 use Sonata\AdminBundle\Form\DataTransformer\ArrayToModelTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -31,7 +33,7 @@ use Symfony\Component\PropertyAccess\PropertyAccessor;
 class AdminType extends AbstractType
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -54,11 +56,27 @@ class AdminType extends AbstractType
         if ($builder->getData() === null) {
             $p = new PropertyAccessor(false, true);
             try {
-                $subject = $p->getValue(
-                    $admin->getParentFieldDescription()->getAdmin()->getSubject(),
-                    $this->getFieldDescription($options)->getFieldName().$options['property_path']
-                );
-                $builder->setData($subject);
+                $parentSubject = $admin->getParentFieldDescription()->getAdmin()->getSubject();
+                if ($parentSubject !== null && $parentSubject !== false) {
+                    // for PropertyAccessor < 2.5
+                    // @todo remove this code for old PropertyAccessor after dropping support for Symfony 2.3
+                    if (!method_exists($p, 'isReadable')) {
+                        $subjectCollection = $p->getValue(
+                            $parentSubject,
+                            $this->getFieldDescription($options)->getFieldName()
+                        );
+                        if ($subjectCollection instanceof Collection) {
+                            $subject = $subjectCollection->get(trim($options['property_path'], '[]'));
+                        }
+                    } else {
+                        // for PropertyAccessor >= 2.5
+                        $subject = $p->getValue(
+                            $parentSubject,
+                            $this->getFieldDescription($options)->getFieldName().$options['property_path']
+                        );
+                    }
+                    $builder->setData($subject);
+                }
             } catch (NoSuchIndexException $e) {
                 // no object here
             }
@@ -93,13 +111,13 @@ class AdminType extends AbstractType
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
             'delete'          => function (Options $options) {
-                return ($options['btn_delete'] !== false);
+                return $options['btn_delete'] !== false;
             },
             'delete_options'  => array(
                 'type'         => 'checkbox',
@@ -119,7 +137,7 @@ class AdminType extends AbstractType
     /**
      * @param array $options
      *
-     * @return \Sonata\AdminBundle\Admin\FieldDescriptionInterface
+     * @return FieldDescriptionInterface
      *
      * @throws \RuntimeException
      */
@@ -135,7 +153,7 @@ class AdminType extends AbstractType
     /**
      * @param array $options
      *
-     * @return \Sonata\AdminBundle\Admin\AdminInterface
+     * @return AdminInterface
      */
     protected function getAdmin(array $options)
     {
@@ -143,9 +161,19 @@ class AdminType extends AbstractType
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
+     *
+     * @todo Remove when dropping Symfony <2.8 support
      */
     public function getName()
+    {
+        return $this->getBlockPrefix();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getBlockPrefix()
     {
         return 'sonata_type_admin';
     }

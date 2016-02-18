@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Sonata Project package.
+ *
+ * (c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Sonata\AdminBundle\Translator\Extractor\JMSTranslatorBundle;
 
 use JMS\TranslationBundle\Model\FileSource;
@@ -15,16 +24,39 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class AdminExtractor implements ExtractorInterface, TranslatorInterface, SecurityHandlerInterface, LabelTranslatorStrategyInterface
 {
+    /**
+     * @var LoggerInterface
+     */
     private $logger;
+
+    /**
+     * @var Pool
+     */
     private $adminPool;
+
+    /**
+     * @var string|bool
+     */
     private $catalogue;
+
+    /**
+     * @var string|bool
+     */
     private $translator;
+
+    /**
+     * @var string|bool
+     */
     private $labelStrategy;
+
+    /**
+     * @var string|bool
+     */
     private $domain;
 
     /**
-     * @param \Sonata\AdminBundle\Admin\Pool                    $adminPool
-     * @param \Symfony\Component\HttpKernel\Log\LoggerInterface $logger
+     * @param Pool            $adminPool
+     * @param LoggerInterface $logger
      */
     public function __construct(Pool $adminPool, LoggerInterface $logger = null)
     {
@@ -39,7 +71,7 @@ class AdminExtractor implements ExtractorInterface, TranslatorInterface, Securit
     }
 
     /**
-     * @param \Symfony\Component\HttpKernel\Log\LoggerInterface $logger
+     * @param LoggerInterface $logger
      */
     public function setLogger(LoggerInterface $logger)
     {
@@ -120,7 +152,7 @@ class AdminExtractor implements ExtractorInterface, TranslatorInterface, Securit
     /**
      * @param string $id
      *
-     * @return \Sonata\AdminBundle\Admin\AdminInterface
+     * @return AdminInterface
      */
     private function getAdmin($id)
     {
@@ -146,7 +178,7 @@ class AdminExtractor implements ExtractorInterface, TranslatorInterface, Securit
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function trans($id, array $parameters = array(), $domain = null, $locale = null)
     {
@@ -156,7 +188,7 @@ class AdminExtractor implements ExtractorInterface, TranslatorInterface, Securit
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function transChoice($id, $number, array $parameters = array(), $domain = null, $locale = null)
     {
@@ -166,7 +198,7 @@ class AdminExtractor implements ExtractorInterface, TranslatorInterface, Securit
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setLocale($locale)
     {
@@ -174,7 +206,7 @@ class AdminExtractor implements ExtractorInterface, TranslatorInterface, Securit
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getLocale()
     {
@@ -182,7 +214,7 @@ class AdminExtractor implements ExtractorInterface, TranslatorInterface, Securit
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function isGranted(AdminInterface $admin, $attributes, $object = null)
     {
@@ -190,35 +222,35 @@ class AdminExtractor implements ExtractorInterface, TranslatorInterface, Securit
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function buildSecurityInformation(AdminInterface $admin)
     {
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function createObjectSecurity(AdminInterface $admin, $object)
     {
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function deleteObjectSecurity(AdminInterface $admin, $object)
     {
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getBaseRole(AdminInterface $admin)
     {
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getLabel($label, $context = '', $type = '')
     {

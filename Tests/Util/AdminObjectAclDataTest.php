@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sonata package.
+ * This file is part of the Sonata Project package.
  *
  * (c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
  *
@@ -93,7 +93,7 @@ class AdminObjectAclDataTest extends \PHPUnit_Framework_TestCase
         $adminObjectAclData = $this->createAdminObjectAclData();
         $ret = $adminObjectAclData->setAcl($acl);
 
-        $this->assertEquals($adminObjectAclData, $ret);
+        $this->assertSame($adminObjectAclData, $ret);
 
         return $adminObjectAclData;
     }
@@ -128,7 +128,7 @@ class AdminObjectAclDataTest extends \PHPUnit_Framework_TestCase
         $adminObjectAclData = $this->createAdminObjectAclData();
         $ret = $adminObjectAclData->setAclUsersForm($form);
 
-        $this->assertEquals($adminObjectAclData, $ret);
+        $this->assertSame($adminObjectAclData, $ret);
 
         return $adminObjectAclData;
     }
@@ -151,7 +151,7 @@ class AdminObjectAclDataTest extends \PHPUnit_Framework_TestCase
         $adminObjectAclData = $this->createAdminObjectAclData();
         $ret = $adminObjectAclData->setAclUsersForm($form);
 
-        $this->assertEquals($adminObjectAclData, $ret);
+        $this->assertSame($adminObjectAclData, $ret);
 
         return $adminObjectAclData;
     }
@@ -170,7 +170,7 @@ class AdminObjectAclDataTest extends \PHPUnit_Framework_TestCase
         $adminObjectAclData = $this->createAdminObjectAclData();
         $ret = $adminObjectAclData->setAclRolesForm($form);
 
-        $this->assertEquals($adminObjectAclData, $ret);
+        $this->assertSame($adminObjectAclData, $ret);
 
         return $adminObjectAclData;
     }
@@ -236,6 +236,6 @@ class AdminObjectAclDataTest extends \PHPUnit_Framework_TestCase
     {
         $adminObjectAclData = $this->createAdminObjectAclData();
 
-        $this->assertEquals(array(), $adminObjectAclData->getSecurityInformation());
+        $this->assertSame(array(), $adminObjectAclData->getSecurityInformation());
     }
 }

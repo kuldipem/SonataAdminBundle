@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sonata package.
+ * This file is part of the Sonata Project package.
  *
  * (c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
  *
@@ -19,9 +19,9 @@ class BCLabelTranslatorStrategyTest extends \PHPUnit_Framework_TestCase
     {
         $strategy = new BCLabelTranslatorStrategy();
 
-        $this->assertEquals('Isvalid', $strategy->getLabel('isValid', 'form', 'label'));
-        $this->assertEquals('Plainpassword', $strategy->getLabel('plainPassword', 'form', 'label'));
+        $this->assertSame('Isvalid', $strategy->getLabel('isValid', 'form', 'label'));
+        $this->assertSame('Plainpassword', $strategy->getLabel('plainPassword', 'form', 'label'));
 
-        $this->assertEquals('breadcrumb.link_projectversion_list', $strategy->getLabel('ProjectVersion_list', 'breadcrumb', 'link'));
+        $this->assertSame('breadcrumb.link_projectversion_list', $strategy->getLabel('ProjectVersion_list', 'breadcrumb', 'link'));
     }
 }

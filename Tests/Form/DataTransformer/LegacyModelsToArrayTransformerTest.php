@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sonata project.
+ * This file is part of the Sonata Project package.
  *
  * (c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
  *
@@ -12,15 +12,15 @@
 namespace Sonata\AdminBundle\Tests\Form\DataTransformer;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Sonata\AdminBundle\Form\ChoiceList\ModelChoiceList;
-use Sonata\AdminBundle\Form\DataTransformer\ModelsToArrayTransformer;
+use Sonata\AdminBundle\Form\DataTransformer\LegacyModelsToArrayTransformer;
 use Sonata\AdminBundle\Tests\Fixtures\Entity\Form\FooEntity;
 
 /**
  * @author Andrej Hudec <pulzarraider@gmail.com>
  */
-class ModelsToArrayTransformerTest extends \PHPUnit_Framework_TestCase
+class LegacyModelsToArrayTransformerTest extends \PHPUnit_Framework_TestCase
 {
+    private $choiceList;
     private $modelChoiceList;
 
     private $modelManager;
@@ -30,7 +30,11 @@ class ModelsToArrayTransformerTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $this->modelChoiceList = $this->getMockBuilder('Sonata\AdminBundle\Form\ChoiceList\ModelChoiceList')
+        if (interface_exists('Symfony\Component\Form\ChoiceList\Loader\ChoiceLoaderInterface')) { // SF2.7+
+            $this->markTestSkipped('Test only available for < SF2.7');
+        }
+
+        $this->choiceList = $this->getMockBuilder('Sonata\AdminBundle\Form\ChoiceList\ModelChoiceList')
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -39,7 +43,7 @@ class ModelsToArrayTransformerTest extends \PHPUnit_Framework_TestCase
         // php 5.3 BC
         $modelManager = $this->modelManager;
 
-        $this->modelChoiceList->expects($this->any())
+        $this->choiceList->expects($this->any())
             ->method('getModelManager')
             ->will($this->returnCallback(function () use ($modelManager) {
                 return $modelManager;
@@ -51,9 +55,9 @@ class ModelsToArrayTransformerTest extends \PHPUnit_Framework_TestCase
      */
     public function testTransform($expected, $collection, $identifiers)
     {
-        $transformer = new ModelsToArrayTransformer($this->modelChoiceList);
+        $transformer = new LegacyModelsToArrayTransformer($this->choiceList);
 
-        $this->modelChoiceList->expects($this->any())
+        $this->choiceList->expects($this->any())
             ->method('getIdentifierValues')
             ->will($this->returnCallback(function ($entity) use ($identifiers) {
                 if ($entity instanceof FooEntity) {
@@ -63,19 +67,19 @@ class ModelsToArrayTransformerTest extends \PHPUnit_Framework_TestCase
                 return array();
             }));
 
-        $this->modelChoiceList->expects($this->any())
+        $this->choiceList->expects($this->any())
             ->method('getIdentifier')
             ->will($this->returnCallback(function () use ($identifiers) {
                 return $identifiers;
             }));
 
-        $this->modelChoiceList->expects($this->any())
+        $this->choiceList->expects($this->any())
             ->method('getEntities')
             ->will($this->returnCallback(function () {
                 return array('bcd' => new FooEntity(array('bcd')), 'efg' => new FooEntity(array('efg')), 'abc' => new FooEntity(array('abc')));
             }));
 
-        $this->assertEquals($expected, $transformer->transform($collection));
+        $this->assertSame($expected, $transformer->transform($collection));
     }
 
     public function getTransformTests()
@@ -93,7 +97,7 @@ class ModelsToArrayTransformerTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('Symfony\Component\Form\Exception\UnexpectedTypeException', 'Expected argument of type "\ArrayAccess", "NULL" given');
 
-        $transformer = new ModelsToArrayTransformer($this->modelChoiceList);
+        $transformer = new LegacyModelsToArrayTransformer($this->choiceList);
 
         $this->modelManager->expects($this->any())
             ->method('getModelCollectionInstance')
@@ -106,7 +110,7 @@ class ModelsToArrayTransformerTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('Symfony\Component\Form\Exception\UnexpectedTypeException', 'Expected argument of type "array", "integer" given');
 
-        $transformer = new ModelsToArrayTransformer($this->modelChoiceList);
+        $transformer = new LegacyModelsToArrayTransformer($this->choiceList);
 
         $this->modelManager->expects($this->any())
             ->method('getModelCollectionInstance')
@@ -120,7 +124,7 @@ class ModelsToArrayTransformerTest extends \PHPUnit_Framework_TestCase
      */
     public function testReverseTransformEmpty($keys)
     {
-        $transformer = new ModelsToArrayTransformer($this->modelChoiceList);
+        $transformer = new LegacyModelsToArrayTransformer($this->choiceList);
 
         $this->modelManager->expects($this->any())
             ->method('getModelCollectionInstance')
@@ -139,7 +143,7 @@ class ModelsToArrayTransformerTest extends \PHPUnit_Framework_TestCase
 
     public function testReverseTransform()
     {
-        $transformer = new ModelsToArrayTransformer($this->modelChoiceList);
+        $transformer = new LegacyModelsToArrayTransformer($this->choiceList);
 
         $this->modelManager->expects($this->any())
             ->method('getModelCollectionInstance')
@@ -149,7 +153,7 @@ class ModelsToArrayTransformerTest extends \PHPUnit_Framework_TestCase
         $entity2 =  new FooEntity(array('bar'));
         $entity3 =  new FooEntity(array('baz'));
 
-        $this->modelChoiceList->expects($this->any())
+        $this->choiceList->expects($this->any())
             ->method('getEntity')
             ->will($this->returnCallback(function ($key) use ($entity1, $entity2, $entity3) {
                 switch ($key) {
@@ -168,7 +172,7 @@ class ModelsToArrayTransformerTest extends \PHPUnit_Framework_TestCase
 
         $collection = $transformer->reverseTransform(array('foo', 'bar'));
         $this->assertInstanceOf('Doctrine\Common\Collections\ArrayCollection', $collection);
-        $this->assertEquals(array($entity1, $entity2), $collection->getValues());
+        $this->assertSame(array($entity1, $entity2), $collection->getValues());
         $this->assertCount(2, $collection);
     }
 
@@ -176,13 +180,13 @@ class ModelsToArrayTransformerTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('Symfony\Component\Form\Exception\TransformationFailedException', 'The entities with keys "nonexistent" could not be found');
 
-        $transformer = new ModelsToArrayTransformer($this->modelChoiceList);
+        $transformer = new LegacyModelsToArrayTransformer($this->choiceList);
 
         $this->modelManager->expects($this->any())
             ->method('getModelCollectionInstance')
             ->will($this->returnValue(new ArrayCollection()));
 
-        $this->modelChoiceList->expects($this->any())
+        $this->choiceList->expects($this->any())
             ->method('getEntity')
             ->will($this->returnValue(false));
 

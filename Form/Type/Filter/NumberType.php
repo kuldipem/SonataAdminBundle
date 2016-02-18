@@ -1,13 +1,12 @@
 <?php
 
 /*
- * This file is part of the Sonata package.
+ * This file is part of the Sonata Project package.
  *
  * (c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
- *
  */
 
 namespace Sonata\AdminBundle\Form\Type\Filter;
@@ -35,10 +34,13 @@ class NumberType extends AbstractType
 
     const TYPE_LESS_THAN = 5;
 
+    /**
+     * @var TranslatorInterface
+     */
     protected $translator;
 
     /**
-     * @param \Symfony\Component\Translation\TranslatorInterface $translator
+     * @param TranslatorInterface $translator
      */
     public function __construct(TranslatorInterface $translator)
     {
@@ -46,11 +48,19 @@ class NumberType extends AbstractType
     }
 
     /**
-     * Returns the name of this type.
+     * {@inheritdoc}
      *
-     * @return string The name of this type
+     * @todo Remove when dropping Symfony <2.8 support
      */
     public function getName()
+    {
+        return $this->getBlockPrefix();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getBlockPrefix()
     {
         return 'sonata_type_filter_number';
     }
@@ -69,6 +79,10 @@ class NumberType extends AbstractType
             self::TYPE_LESS_THAN     => $this->translator->trans('label_type_less_than', array(), 'SonataAdminBundle'),
         );
 
+        if (!method_exists('Symfony\Component\Form\FormTypeInterface', 'setDefaultOptions')) {
+            $choices = array_flip($choices);
+        }
+
         $builder
             ->add('type', 'choice', array('choices' => $choices, 'required' => false))
             ->add('value', $options['field_type'], array_merge(array('required' => false), $options['field_options']))
@@ -86,7 +100,7 @@ class NumberType extends AbstractType
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)
     {

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sonata package.
+ * This file is part of the Sonata Project package.
  *
  * (c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
  *
@@ -50,6 +50,11 @@ class ShowMapperTest extends \PHPUnit_Framework_TestCase
      */
     private $groups;
 
+    /**
+     * @var array
+     */
+    private $listShowFields;
+
     public function setUp()
     {
         $this->showBuilder = $this->getMock('Sonata\AdminBundle\Builder\ShowBuilderInterface');
@@ -65,9 +70,11 @@ class ShowMapperTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(array()));
 
         $this->groups = array();
+        $this->listShowFields = array();
 
         // php 5.3 BC
         $groups = &$this->groups;
+        $listShowFields = &$this->listShowFields;
 
         $this->admin->expects($this->any())
             ->method('getShowGroups')
@@ -114,6 +121,18 @@ class ShowMapperTest extends \PHPUnit_Framework_TestCase
             ->method('getLabelTranslatorStrategy')
             ->will($this->returnValue($labelTranslatorStrategy));
 
+        $this->admin->expects($this->any())
+            ->method('hasShowFieldDescription')
+            ->will($this->returnCallback(function ($name) use (&$listShowFields) {
+                if (isset($listShowFields[$name])) {
+                    return true;
+                } else {
+                    $listShowFields[$name] = true;
+
+                    return false;
+                }
+            }));
+
         $this->showBuilder->expects($this->any())
             ->method('addField')
             ->will($this->returnCallback(function ($list, $type, $fieldDescription, $admin) {
@@ -127,9 +146,9 @@ class ShowMapperTest extends \PHPUnit_Framework_TestCase
     {
         $fieldDescription = $this->getFieldDescriptionMock('fooName', 'fooLabel');
 
-        $this->assertEquals($this->showMapper, $this->showMapper->add($fieldDescription));
-        $this->assertEquals($this->showMapper, $this->showMapper->remove('fooName'));
-        $this->assertEquals($this->showMapper, $this->showMapper->reorder(array()));
+        $this->assertSame($this->showMapper, $this->showMapper->add($fieldDescription));
+        $this->assertSame($this->showMapper, $this->showMapper->remove('fooName'));
+        $this->assertSame($this->showMapper, $this->showMapper->reorder(array()));
     }
 
     public function testGet()
@@ -139,7 +158,7 @@ class ShowMapperTest extends \PHPUnit_Framework_TestCase
         $fieldDescription = $this->getFieldDescriptionMock('fooName', 'fooLabel');
 
         $this->showMapper->add($fieldDescription);
-        $this->assertEquals($fieldDescription, $this->showMapper->get('fooName'));
+        $this->assertSame($fieldDescription, $this->showMapper->get('fooName'));
     }
 
     public function testAdd()
@@ -151,8 +170,8 @@ class ShowMapperTest extends \PHPUnit_Framework_TestCase
         $fieldDescription = $this->showMapper->get('fooName');
 
         $this->assertInstanceOf('Sonata\AdminBundle\Admin\FieldDescriptionInterface', $fieldDescription);
-        $this->assertEquals('fooName', $fieldDescription->getName());
-        $this->assertEquals('fooName', $fieldDescription->getOption('label'));
+        $this->assertSame('fooName', $fieldDescription->getName());
+        $this->assertSame('fooName', $fieldDescription->getOption('label'));
     }
 
     public function testIfTrueApply()
@@ -165,8 +184,8 @@ class ShowMapperTest extends \PHPUnit_Framework_TestCase
         $fieldDescription = $this->showMapper->get('fooName');
 
         $this->assertInstanceOf('Sonata\AdminBundle\Admin\FieldDescriptionInterface', $fieldDescription);
-        $this->assertEquals('fooName', $fieldDescription->getName());
-        $this->assertEquals('fooName', $fieldDescription->getOption('label'));
+        $this->assertSame('fooName', $fieldDescription->getName());
+        $this->assertSame('fooName', $fieldDescription->getOption('label'));
     }
 
     public function testIfTrueNotApply()
@@ -190,8 +209,8 @@ class ShowMapperTest extends \PHPUnit_Framework_TestCase
         $fieldDescription = $this->showMapper->get('barName');
 
         $this->assertInstanceOf('Sonata\AdminBundle\Admin\FieldDescriptionInterface', $fieldDescription);
-        $this->assertEquals('barName', $fieldDescription->getName());
-        $this->assertEquals('barName', $fieldDescription->getOption('label'));
+        $this->assertSame('barName', $fieldDescription->getName());
+        $this->assertSame('barName', $fieldDescription->getOption('label'));
     }
 
     public function testIfFalseApply()
@@ -204,8 +223,8 @@ class ShowMapperTest extends \PHPUnit_Framework_TestCase
         $fieldDescription = $this->showMapper->get('fooName');
 
         $this->assertInstanceOf('Sonata\AdminBundle\Admin\FieldDescriptionInterface', $fieldDescription);
-        $this->assertEquals('fooName', $fieldDescription->getName());
-        $this->assertEquals('fooName', $fieldDescription->getOption('label'));
+        $this->assertSame('fooName', $fieldDescription->getName());
+        $this->assertSame('fooName', $fieldDescription->getOption('label'));
     }
 
     public function testIfFalseNotApply()
@@ -229,8 +248,8 @@ class ShowMapperTest extends \PHPUnit_Framework_TestCase
         $fieldDescription = $this->showMapper->get('barName');
 
         $this->assertInstanceOf('Sonata\AdminBundle\Admin\FieldDescriptionInterface', $fieldDescription);
-        $this->assertEquals('barName', $fieldDescription->getName());
-        $this->assertEquals('barName', $fieldDescription->getOption('label'));
+        $this->assertSame('barName', $fieldDescription->getName());
+        $this->assertSame('barName', $fieldDescription->getOption('label'));
     }
 
     /**
@@ -319,9 +338,25 @@ class ShowMapperTest extends \PHPUnit_Framework_TestCase
         $this->fail('Failed asserting that exception of type "\RuntimeException" is thrown.');
     }
 
+    public function testAddDuplicateFieldNameException()
+    {
+        $name = 'name';
+
+        try {
+            $this->showMapper->add($name);
+            $this->showMapper->add($name);
+        } catch (\RuntimeException $e) {
+            $this->assertContains(sprintf('Duplicate field name "%s" in show mapper. Names should be unique.', $name), $e->getMessage());
+
+            return;
+        }
+
+        $this->fail('Failed asserting that duplicate field name exception of type "\RuntimeException" is thrown.');
+    }
+
     public function testReorder()
     {
-        $this->assertEquals(array(), $this->admin->getShowGroups());
+        $this->assertSame(array(), $this->admin->getShowGroups());
 
         $fieldDescription1 = $this->getFieldDescriptionMock('fooName1', 'fooLabel1');
         $fieldDescription2 = $this->getFieldDescriptionMock('fooName2', 'fooLabel2');
@@ -334,21 +369,21 @@ class ShowMapperTest extends \PHPUnit_Framework_TestCase
         $this->showMapper->add($fieldDescription3);
         $this->showMapper->add($fieldDescription4);
 
-        $this->assertEquals(array(
+        $this->assertSame(array(
             'Group1' => array(
                 'collapsed'          => false,
-                'fields'             => array('fooName1' => 'fooName1', 'fooName2' => 'fooName2', 'fooName3' => 'fooName3', 'fooName4' => 'fooName4'),
+                'class'              => false,
                 'description'        => false,
                 'translation_domain' => null,
-                'class'              => false,
                 'name'               => 'Group1',
                 'box_class'          => 'box box-primary',
+                'fields'             => array('fooName1' => 'fooName1', 'fooName2' => 'fooName2', 'fooName3' => 'fooName3', 'fooName4' => 'fooName4'),
             ), ), $this->admin->getShowGroups());
 
         $this->showMapper->reorder(array('fooName3', 'fooName2', 'fooName1', 'fooName4'));
 
         // print_r is used to compare order of items in associative arrays
-        $this->assertEquals(print_r(array(
+        $this->assertSame(print_r(array(
             'Group1' => array(
                 'collapsed'          => false,
                 'class'              => false,

@@ -34,28 +34,31 @@ When adding a form group to your edit/create form, you may specify some options 
 - ``description``: to complete
 - ``translation_domain``: to complete
 
-To specify options, do as follow:
+To specify options, do as follows:
 
 .. code-block:: php
 
     <?php
+    // src/AppBundle/Admin/PersonAdmin.php
 
-    MyAdmin extends Admin
+    class PersonAdmin extends Admin
     {
-        # ...
+        // ...
 
         public function configureFormFields(FormMapper $formMapper)
         {
             $formMapper
                 ->tab('General') // the tab call is optional
-                    ->with('Addresses',
-                        array(
-                            'class'       => 'col-md-8',
-                            'box_class'   => 'box box-solid box-danger',
-                            'description' => 'Lorem ipsum',
-                            // ...
-                            ))
+                    ->with('Addresses', array(
+                        'class'       => 'col-md-8',
+                        'box_class'   => 'box box-solid box-danger',
+                        'description' => 'Lorem ipsum',
                         // ...
+                    ))
+                    ->add('title')
+
+                    // ...
+
                     ->end()
                 ->end()
             ;

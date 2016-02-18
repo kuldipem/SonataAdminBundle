@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sonata project.
+ * This file is part of the Sonata Project package.
  *
  * (c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
  *
@@ -12,7 +12,7 @@
 namespace Sonata\AdminBundle\Route;
 
 use Sonata\AdminBundle\Admin\Pool;
-use Symfony\Component\Config\Loader\FileLoader;
+use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\RouteCollection as SymfonyRouteCollection;
@@ -22,12 +22,12 @@ use Symfony\Component\Routing\RouteCollection as SymfonyRouteCollection;
  *
  * @author  Thomas Rabaix <thomas.rabaix@sonata-project.org>
  */
-class AdminPoolLoader extends FileLoader
+class AdminPoolLoader extends Loader
 {
     const ROUTE_TYPE_NAME = 'sonata_admin';
 
     /**
-     * @var \Sonata\AdminBundle\Admin\Pool
+     * @var Pool
      */
     protected $pool;
 
@@ -36,14 +36,17 @@ class AdminPoolLoader extends FileLoader
      */
     protected $adminServiceIds = array();
 
+    /**
+     * @var ContainerInterface
+     */
     protected $container;
 
     /**
-     * @param \Sonata\AdminBundle\Admin\Pool                            $pool
-     * @param array                                                     $adminServiceIds
-     * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+     * @param Pool               $pool
+     * @param array              $adminServiceIds
+     * @param ContainerInterface $container
      */
-    public function __construct(Pool $pool, $adminServiceIds, ContainerInterface $container)
+    public function __construct(Pool $pool, array $adminServiceIds, ContainerInterface $container)
     {
         $this->pool             = $pool;
         $this->adminServiceIds  = $adminServiceIds;
@@ -51,7 +54,7 @@ class AdminPoolLoader extends FileLoader
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function supports($resource, $type = null)
     {
@@ -59,7 +62,7 @@ class AdminPoolLoader extends FileLoader
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function load($resource, $type = null)
     {

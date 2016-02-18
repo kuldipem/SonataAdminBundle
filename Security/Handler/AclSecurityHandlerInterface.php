@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sonata project.
+ * This file is part of the Sonata Project package.
  *
  * (c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
  *
@@ -65,7 +65,7 @@ interface AclSecurityHandlerInterface extends SecurityHandlerInterface
      *
      * @param ObjectIdentityInterface $objectIdentity
      *
-     * @return null|\Symfony\Component\Security\Acl\Model\AclInterface or NULL if not found
+     * @return null|AclInterface or NULL if not found
      */
     public function getObjectAcl(ObjectIdentityInterface $objectIdentity);
 

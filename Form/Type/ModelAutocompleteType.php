@@ -1,13 +1,12 @@
 <?php
 
 /*
- * This file is part of the Sonata package.
+ * This file is part of the Sonata Project package.
  *
  * (c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
- *
  */
 
 namespace Sonata\AdminBundle\Form\Type;
@@ -31,7 +30,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 class ModelAutocompleteType extends AbstractType
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -74,6 +73,8 @@ class ModelAutocompleteType extends AbstractType
         $view->vars['req_param_name_search'] = $options['req_param_name_search'];
         $view->vars['req_param_name_page_number'] = $options['req_param_name_page_number'];
         $view->vars['req_param_name_items_per_page'] = $options['req_param_name_items_per_page'];
+        $view->vars['quiet_millis'] = $options['quiet_millis'];
+        $view->vars['cache'] = $options['cache'];
 
         // CSS classes
         $view->vars['container_css_class'] = $options['container_css_class'];
@@ -99,7 +100,7 @@ class ModelAutocompleteType extends AbstractType
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)
     {
@@ -121,6 +122,8 @@ class ModelAutocompleteType extends AbstractType
             'placeholder'                   => '',
             'minimum_input_length'          => 3, //minimum 3 chars should be typed to load ajax data
             'items_per_page'                => 10, //number of items per page
+            'quiet_millis'                  => 100,
+            'cache'                         => false,
 
             'to_string_callback'            => null,
 
@@ -146,7 +149,7 @@ class ModelAutocompleteType extends AbstractType
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getParent()
     {
@@ -154,10 +157,18 @@ class ModelAutocompleteType extends AbstractType
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
+     */
+    public function getBlockPrefix()
+    {
+        return 'sonata_type_model_autocomplete';
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function getName()
     {
-        return 'sonata_type_model_autocomplete';
+        return $this->getBlockPrefix();
     }
 }

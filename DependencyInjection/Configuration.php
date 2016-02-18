@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sonata project.
+ * This file is part of the Sonata Project package.
  *
  * (c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
  *
@@ -27,7 +27,7 @@ class Configuration implements ConfigurationInterface
     /**
      * Generates the configuration tree.
      *
-     * @return \Symfony\Component\Config\Definition\Builder\TreeBuilder
+     * @return TreeBuilder
      */
     public function getConfigTreeBuilder()
     {
@@ -75,10 +75,12 @@ class Configuration implements ConfigurationInterface
                     ->addDefaultsIfNotSet()
                     ->children()
                         ->booleanNode('html5_validate')->defaultTrue()->end()
+                        ->booleanNode('sort_admins')->defaultFalse()->info('Auto order groups and admins by label or id')->end()
                         ->booleanNode('confirm_exit')->defaultTrue()->end()
                         ->booleanNode('use_select2')->defaultTrue()->end()
                         ->booleanNode('use_icheck')->defaultTrue()->end()
                         ->booleanNode('use_bootlint')->defaultFalse()->end()
+                        ->booleanNode('use_stickyforms')->defaultTrue()->end()
                         ->integerNode('pager_links')->defaultNull()->end()
                         ->scalarNode('form_type')->defaultValue('standard')->end()
                         ->integerNode('dropdown_number_groups_per_colums')->defaultValue(2)->end()
@@ -86,6 +88,10 @@ class Configuration implements ConfigurationInterface
                             ->values(array('single_text', 'single_image', 'both'))
                             ->defaultValue('both')
                             ->cannotBeEmpty()
+                        ->end()
+                        ->booleanNode('lock_protection')
+                            ->defaultFalse()
+                            ->info('Enable locking when editing an object, if the corresponding object manager supports it.')
                         ->end()
                     ->end()
                 ->end()
@@ -278,7 +284,7 @@ class Configuration implements ConfigurationInterface
                                 'bundles/sonatacore/vendor/ionicons/css/ionicons.min.css',
                                 'bundles/sonataadmin/vendor/admin-lte/dist/css/AdminLTE.min.css',
                                 'bundles/sonataadmin/vendor/admin-lte/dist/css/skins/skin-black.min.css',
-                                'bundles/sonataadmin/vendor/iCheck/skins/flat/blue.css',
+                                'bundles/sonataadmin/vendor/iCheck/skins/square/blue.css',
 
                                 'bundles/sonatacore/vendor/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css',
 
@@ -302,12 +308,12 @@ class Configuration implements ConfigurationInterface
 
                                 'bundles/sonatacore/vendor/moment/min/moment.min.js',
 
+                                'bundles/sonataadmin/vendor/jqueryui/ui/minified/jquery-ui.min.js',
+                                'bundles/sonataadmin/vendor/jqueryui/ui/minified/i18n/jquery-ui-i18n.min.js',
+
                                 'bundles/sonatacore/vendor/bootstrap/dist/js/bootstrap.min.js',
 
                                 'bundles/sonatacore/vendor/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js',
-
-                                'bundles/sonataadmin/vendor/jqueryui/ui/minified/jquery-ui.min.js',
-                                'bundles/sonataadmin/vendor/jqueryui/ui/minified/i18n/jquery-ui-i18n.min.js',
 
                                 'bundles/sonataadmin/vendor/jquery-form/jquery.form.js',
                                 'bundles/sonataadmin/jquery/jquery.confirmExit.js',
@@ -319,6 +325,8 @@ class Configuration implements ConfigurationInterface
                                 'bundles/sonataadmin/vendor/admin-lte/dist/js/app.min.js',
                                 'bundles/sonataadmin/vendor/iCheck/icheck.min.js',
                                 'bundles/sonataadmin/vendor/slimScroll/jquery.slimscroll.min.js',
+                                'bundles/sonataadmin/vendor/waypoints/lib/jquery.waypoints.min.js',
+                                'bundles/sonataadmin/vendor/waypoints/lib/shortcuts/sticky.min.js',
 
                                 'bundles/sonataadmin/Admin.js',
                                 'bundles/sonataadmin/treeview.js',

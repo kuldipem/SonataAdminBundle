@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sonata package.
+ * This file is part of the Sonata Project package.
  *
  * (c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
  *
@@ -19,7 +19,7 @@ class NoopLabelTranslatorStrategyTest extends \PHPUnit_Framework_TestCase
     {
         $strategy = new NoopLabelTranslatorStrategy();
 
-        $this->assertEquals('isValid', $strategy->getLabel('isValid', 'form', 'label'));
-        $this->assertEquals('isValid_SuperCool', $strategy->getLabel('isValid_SuperCool', 'form', 'label'));
+        $this->assertSame('isValid', $strategy->getLabel('isValid', 'form', 'label'));
+        $this->assertSame('isValid_SuperCool', $strategy->getLabel('isValid_SuperCool', 'form', 'label'));
     }
 }

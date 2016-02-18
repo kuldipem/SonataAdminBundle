@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sonata package.
+ * This file is part of the Sonata Project package.
  *
  * (c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
  *
@@ -27,10 +27,19 @@ use Symfony\Component\EventDispatcher\Event;
  */
 class ConfigureQueryEvent extends Event
 {
+    /**
+     * @var AdminInterface
+     */
     protected $admin;
 
+    /**
+     * @var ProxyQueryInterface
+     */
     protected $proxyQuery;
 
+    /**
+     * @var string
+     */
     protected $context;
 
     /**

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sonata project.
+ * This file is part of the Sonata Project package.
  *
  * (c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
  *
@@ -31,7 +31,7 @@ class ArrayToModelTransformerTest extends \PHPUnit_Framework_TestCase
         $transformer = new ArrayToModelTransformer($this->modelManager, 'Sonata\AdminBundle\Tests\Fixtures\Entity\Form\FooEntity');
 
         $entity = new FooEntity();
-        $this->assertEquals($entity, $transformer->reverseTransform($entity));
+        $this->assertSame($entity, $transformer->reverseTransform($entity));
     }
 
     /**
@@ -68,7 +68,7 @@ class ArrayToModelTransformerTest extends \PHPUnit_Framework_TestCase
     {
         $transformer = new ArrayToModelTransformer($this->modelManager, 'Sonata\AdminBundle\Tests\Fixtures\Entity\Form\FooEntity');
 
-        $this->assertEquals($expected, $transformer->transform($value));
+        $this->assertSame($expected, $transformer->transform($value));
     }
 
     public function getTransformTests()

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sonata project.
+ * This file is part of the Sonata Project package.
  *
  * (c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
  *
@@ -19,18 +19,22 @@ use Sonata\BlockBundle\Block\BlockContextInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * Class AdminSearchBlockService.
- *
- * @author  Thomas Rabaix <thomas.rabaix@sonata-project.org>
+ * @author Thomas Rabaix <thomas.rabaix@sonata-project.org>
  */
 class AdminSearchBlockService extends BaseBlockService
 {
+    /**
+     * @var Pool
+     */
     protected $pool;
 
+    /**
+     * @var SearchHandler
+     */
     protected $searchHandler;
 
     /**
@@ -93,13 +97,14 @@ class AdminSearchBlockService extends BaseBlockService
     /**
      * {@inheritdoc}
      */
-    public function setDefaultSettings(OptionsResolverInterface $resolver)
+    public function configureSettings(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
             'admin_code' => false,
             'query'      => '',
             'page'       => 0,
             'per_page'   => 10,
+            'icon'       => '<i class="fa fa-list"></i>',
         ));
     }
 }

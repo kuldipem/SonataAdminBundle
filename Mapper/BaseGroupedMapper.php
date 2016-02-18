@@ -1,13 +1,12 @@
 <?php
 
 /*
- * This file is part of the Sonata package.
+ * This file is part of the Sonata Project package.
  *
  * (c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
- *
  */
 
 namespace Sonata\AdminBundle\Mapper;
@@ -20,15 +19,39 @@ namespace Sonata\AdminBundle\Mapper;
  */
 abstract class BaseGroupedMapper extends BaseMapper
 {
+    /**
+     * @var string
+     */
     protected $currentGroup;
+
+    /**
+     * @var string
+     */
     protected $currentTab;
 
+    /**
+     * @var bool
+     */
     protected $apply;
 
+    /**
+     * @return array
+     */
     abstract protected function getGroups();
+
+    /**
+     * @return array
+     */
     abstract protected function getTabs();
 
+    /**
+     * @param array $groups
+     */
     abstract protected function setGroups(array $groups);
+
+    /**
+     * @param array $tabs
+     */
     abstract protected function setTabs(array $tabs);
 
     /**

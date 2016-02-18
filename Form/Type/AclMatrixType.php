@@ -1,20 +1,18 @@
 <?php
 
 /*
- * This file is part of the Sonata package.
+ * This file is part of the Sonata Project package.
  *
  * (c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
- *
  */
 
 namespace Sonata\AdminBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -28,7 +26,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class AclMatrixType extends AbstractType
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -53,7 +51,7 @@ class AclMatrixType extends AbstractType
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)
     {
@@ -62,21 +60,31 @@ class AclMatrixType extends AbstractType
             'acl_value',
         ));
 
-        if (version_compare(Kernel::VERSION, '2.6', '<')) {
+        if (method_exists($resolver, 'setDefined')) {
+            $resolver->setAllowedTypes('permissions', 'array');
+            $resolver->setAllowedTypes('acl_value', array('string', '\Symfony\Component\Security\Core\User\UserInterface'));
+        } else {
             $resolver->setAllowedTypes(array(
                 'permissions' => 'array',
                 'acl_value'   => array('string', '\Symfony\Component\Security\Core\User\UserInterface'),
             ));
-        } else {
-            $resolver->setAllowedTypes('permissions', 'array');
-            $resolver->setAllowedTypes('acl_value', array('string', '\Symfony\Component\Security\Core\User\UserInterface'));
         }
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
+     *
+     * @todo Remove when dropping Symfony <2.8 support
      */
     public function getName()
+    {
+        return $this->getBlockPrefix();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getBlockPrefix()
     {
         return 'sonata_type_acl_matrix';
     }

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sonata package.
+ * This file is part of the Sonata Project package.
  *
  * (c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
  *
@@ -37,11 +37,13 @@ use Symfony\Component\HttpKernel\KernelInterface;
  */
 class GenerateAdminCommand extends ContainerAwareCommand
 {
-    /** @var string[] */
+    /**
+     * @var string[]
+     */
     private $managerTypes;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function configure()
     {
@@ -59,7 +61,7 @@ class GenerateAdminCommand extends ContainerAwareCommand
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function isEnabled()
     {
@@ -67,7 +69,7 @@ class GenerateAdminCommand extends ContainerAwareCommand
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -137,7 +139,7 @@ class GenerateAdminCommand extends ContainerAwareCommand
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function interact(InputInterface $input, OutputInterface $output)
     {
@@ -300,6 +302,15 @@ class GenerateAdminCommand extends ContainerAwareCommand
         return $questionHelper->ask($input, $output, $question);
     }
 
+    /**
+     * @param InputInterface  $input
+     * @param OutputInterface $output
+     * @param string          $questionText
+     * @param string          $default
+     * @param string          $separator
+     *
+     * @return string
+     */
     private function askConfirmation(InputInterface $input, OutputInterface $output, $questionText, $default, $separator)
     {
         $questionHelper = $this->getQuestionHelper();

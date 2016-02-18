@@ -339,6 +339,17 @@ td.sonata-ba-list-field .editable-empty:not(.editable-open) {
 .editable-pre-wrapped {
     white-space: normal;
 }
+.editable-container .prev:before {
+    content: "\2190 ";
+}
+.editable-container .next:before {
+    content: "\2192 ";
+}
+
+/* bootstrap */
+.input-group-addon {
+    width: auto; /* See https://github.com/sonata-project/SonataAdminBundle/issues/2950 */
+}
 
 /* select2 */
 .select2-choice, .select2-choices, .select2-drop {

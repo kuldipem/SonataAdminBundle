@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sonata package.
+ * This file is part of the Sonata Project package.
  *
  * (c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
  *
@@ -32,10 +32,10 @@ interface ShowBuilderInterface extends BuilderInterface
     /**
      * @abstract
      *
-     * @param \Sonata\AdminBundle\Admin\FieldDescriptionCollection $list
-     * @param null                                                 $type
-     * @param \Sonata\AdminBundle\Admin\FieldDescriptionInterface  $fieldDescription
-     * @param \Sonata\AdminBundle\Admin\AdminInterface             $admin
+     * @param FieldDescriptionCollection $list
+     * @param string|null                $type
+     * @param FieldDescriptionInterface  $fieldDescription
+     * @param AdminInterface             $admin
      */
     public function addField(FieldDescriptionCollection $list, $type = null, FieldDescriptionInterface $fieldDescription, AdminInterface $admin);
 }

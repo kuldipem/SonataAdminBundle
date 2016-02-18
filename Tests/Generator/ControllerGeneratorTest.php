@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sonata package.
+ * This file is part of the Sonata Project package.
  *
  * (c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
  *
@@ -30,7 +30,7 @@ class ControllerGeneratorTest extends \PHPUnit_Framework_TestCase
     private $bundlePath;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function setUp()
     {
@@ -40,7 +40,7 @@ class ControllerGeneratorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function tearDown()
     {
@@ -52,11 +52,11 @@ class ControllerGeneratorTest extends \PHPUnit_Framework_TestCase
     {
         $this->controllerGenerator->generate($this->bundleMock, 'ModelAdminController');
         $file = $this->controllerGenerator->getFile();
-        $this->assertEquals(
+        $this->assertSame(
             'Sonata\AdminBundle\Tests\Fixtures\Controller\ModelAdminController',
             $this->controllerGenerator->getClass()
         );
-        $this->assertEquals('ModelAdminController.php', basename($file));
+        $this->assertSame('ModelAdminController.php', basename($file));
         $this->assertFileEquals(__DIR__.'/../Fixtures/Controller/ModelAdminController.php', $file);
 
         try {

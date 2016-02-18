@@ -1,9 +1,9 @@
 <?php
 
 /*
- * This file is part of the Symfony package.
+ * This file is part of the Sonata Project package.
  *
- * (c) Fabien Potencier <fabien@symfony.com>
+ * (c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -27,7 +27,7 @@ use Symfony\Component\PropertyAccess\PropertyPath;
 class ModelChoiceList extends SimpleChoiceList
 {
     /**
-     * @var \Sonata\AdminBundle\Model\ModelManagerInterface
+     * @var ModelManagerInterface
      */
     private $modelManager;
 
@@ -77,6 +77,9 @@ class ModelChoiceList extends SimpleChoiceList
      */
     private $reflProperties = array();
 
+    /**
+     * @var PropertyPath
+     */
     private $propertyPath;
 
     /**
@@ -125,12 +128,16 @@ class ModelChoiceList extends SimpleChoiceList
      */
     protected function load($choices)
     {
-        if (is_array($choices)) {
+        if (is_array($choices) && count($choices) > 0) {
             $entities = $choices;
         } elseif ($this->query) {
             $entities = $this->modelManager->executeQuery($this->query);
         } else {
             $entities = $this->modelManager->findBy($this->class);
+        }
+
+        if (null === $entities) {
+            return array();
         }
 
         $choices = array();
@@ -261,7 +268,7 @@ class ModelChoiceList extends SimpleChoiceList
     }
 
     /**
-     * @return \Sonata\AdminBundle\Model\ModelManagerInterface
+     * @return ModelManagerInterface
      */
     public function getModelManager()
     {

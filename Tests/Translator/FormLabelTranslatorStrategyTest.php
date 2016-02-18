@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sonata package.
+ * This file is part of the Sonata Project package.
  *
  * (c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
  *
@@ -19,7 +19,7 @@ class FormLabelTranslatorStrategyTest extends \PHPUnit_Framework_TestCase
     {
         $strategy = new FormLabelTranslatorStrategy();
 
-        $this->assertEquals('Isvalid', $strategy->getLabel('isValid', 'form', 'label'));
-        $this->assertEquals('Plainpassword', $strategy->getLabel('plainPassword', 'form', 'label'));
+        $this->assertSame('Isvalid', $strategy->getLabel('isValid', 'form', 'label'));
+        $this->assertSame('Plainpassword', $strategy->getLabel('plainPassword', 'form', 'label'));
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sonata package.
+ * This file is part of the Sonata Project package.
  *
  * (c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
  *
@@ -116,7 +116,7 @@ class CreateClassCacheCommandTest extends \PHPUnit_Framework_TestCase
             $commandTester = new CommandTester($command);
             $commandTester->execute(array('command' => $command->getName()));
         } catch (\RuntimeException $e) {
-            $this->assertEquals(sprintf('The file %s/classes.map does not exist', $this->tempDirectory), $e->getMessage());
+            $this->assertSame(sprintf('The file %s/classes.map does not exist', $this->tempDirectory), $e->getMessage());
 
             return;
         }

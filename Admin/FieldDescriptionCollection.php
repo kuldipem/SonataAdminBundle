@@ -1,13 +1,12 @@
 <?php
 
 /*
- * This file is part of the Sonata package.
+ * This file is part of the Sonata Project package.
  *
  * (c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
- *
  */
 
 namespace Sonata\AdminBundle\Admin;
@@ -19,10 +18,13 @@ namespace Sonata\AdminBundle\Admin;
  */
 class FieldDescriptionCollection implements \ArrayAccess, \Countable
 {
+    /**
+     * @var FieldDescriptionInterface[]
+     */
     protected $elements = array();
 
     /**
-     * @param \Sonata\AdminBundle\Admin\FieldDescriptionInterface $fieldDescription
+     * @param FieldDescriptionInterface $fieldDescription
      */
     public function add(FieldDescriptionInterface $fieldDescription)
     {
@@ -74,7 +76,7 @@ class FieldDescriptionCollection implements \ArrayAccess, \Countable
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function offsetExists($offset)
     {
@@ -82,7 +84,7 @@ class FieldDescriptionCollection implements \ArrayAccess, \Countable
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function offsetGet($offset)
     {
@@ -90,7 +92,7 @@ class FieldDescriptionCollection implements \ArrayAccess, \Countable
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function offsetSet($offset, $value)
     {
@@ -98,7 +100,7 @@ class FieldDescriptionCollection implements \ArrayAccess, \Countable
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function offsetUnset($offset)
     {
@@ -106,7 +108,7 @@ class FieldDescriptionCollection implements \ArrayAccess, \Countable
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function count()
     {

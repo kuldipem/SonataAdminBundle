@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sonata package.
+ * This file is part of the Sonata Project package.
  *
  * (c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
  *
@@ -12,6 +12,8 @@
 namespace Sonata\AdminBundle\Controller;
 
 use Sonata\AdminBundle\Admin\AdminInterface;
+use Sonata\AdminBundle\Admin\Pool;
+use Sonata\AdminBundle\Search\SearchHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -26,7 +28,7 @@ use Symfony\Component\HttpFoundation\Response;
 class CoreController extends Controller
 {
     /**
-     * @return \Sonata\AdminBundle\Admin\Pool
+     * @return Pool
      */
     protected function getAdminPool()
     {
@@ -34,7 +36,7 @@ class CoreController extends Controller
     }
 
     /**
-     * @return \Sonata\AdminBundle\Search\SearchHandler
+     * @return SearchHandler
      */
     protected function getSearchHandler()
     {

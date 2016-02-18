@@ -1,8 +1,9 @@
 <?php
 
 /*
- * This file is part of the symfony package.
- * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
+ * This file is part of the Sonata Project package.
+ *
+ * (c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -21,20 +22,70 @@ abstract class Pager implements \Iterator, \Countable, \Serializable, PagerInter
     const TYPE_DEFAULT = 'default';
     const TYPE_SIMPLE = 'simple';
 
+    /**
+     * @var int
+     */
     protected $page = 1;
+
+    /**
+     * @var int
+     */
     protected $maxPerPage = 0;
+
+    /**
+     * @var int
+     */
     protected $lastPage = 1;
+
+    /**
+     * @var int
+     */
     protected $nbResults = 0;
+
+    /**
+     * @var int
+     */
     protected $cursor = 1;
+
+    /**
+     * @var array
+     */
     protected $parameters = array();
+
+    /**
+     * @var int
+     */
     protected $currentMaxLink = 1;
+
+    /**
+     * @var bool
+     */
     protected $maxRecordLimit = false;
+
+    /**
+     * @var int
+     */
     protected $maxPageLinks = 0;
 
     // used by iterator interface
+    /**
+     * @var array|null
+     */
     protected $results = null;
+
+    /**
+     * @var int
+     */
     protected $resultsCounter = 0;
+
+    /**
+     * @var ProxyQueryInterface|null
+     */
     protected $query = null;
+
+    /**
+     * @var array
+     */
     protected $countColumn = array('id');
 
     /**

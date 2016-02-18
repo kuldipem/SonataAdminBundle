@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sonata package.
+ * This file is part of the Sonata Project package.
  *
  * (c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
  *
@@ -57,12 +57,7 @@ class SimplePager extends Pager
     }
 
     /**
-     * Returns the exact count when there is only one page or when the current
-     * equals the last page.
-     *
-     * In all other cases an estimate of the total count is returned.
-     *
-     * @return int
+     * {@inheritdoc}
      */
     public function getNbResults()
     {
@@ -75,11 +70,7 @@ class SimplePager extends Pager
     }
 
     /**
-     * Get all the results for the pager instance.
-     *
-     * @param mixed $hydrationMode A hydration mode identifier
-     *
-     * @return array
+     * {@inheritdoc}
      */
     public function getResults($hydrationMode = null)
     {
@@ -105,7 +96,7 @@ class SimplePager extends Pager
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function haveToPaginate()
     {
@@ -113,7 +104,7 @@ class SimplePager extends Pager
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function resetIterator()
     {
@@ -122,7 +113,7 @@ class SimplePager extends Pager
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      *
      * @throws \RuntimeException the QueryBuilder is uninitialized.
      */

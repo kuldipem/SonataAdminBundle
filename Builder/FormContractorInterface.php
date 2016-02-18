@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sonata package.
+ * This file is part of the Sonata Project package.
  *
  * (c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
  *
@@ -25,7 +25,7 @@ interface FormContractorInterface extends BuilderInterface
     /**
      * @abstract
      *
-     * @param \Symfony\Component\Form\FormFactoryInterface $formFactory
+     * @param FormFactoryInterface $formFactory
      */
     public function __construct(FormFactoryInterface $formFactory);
 
@@ -42,8 +42,8 @@ interface FormContractorInterface extends BuilderInterface
     /**
      * @abstract
      *
-     * @param string                                              $type
-     * @param \Sonata\AdminBundle\Admin\FieldDescriptionInterface $fieldDescription
+     * @param string                    $type
+     * @param FieldDescriptionInterface $fieldDescription
      *
      * @return array
      */

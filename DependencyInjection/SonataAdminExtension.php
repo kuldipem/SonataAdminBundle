@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sonata project.
+ * This file is part of the Sonata Project package.
  *
  * (c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
  *
@@ -11,7 +11,6 @@
 
 namespace Sonata\AdminBundle\DependencyInjection;
 
-use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
@@ -81,9 +80,8 @@ BOOM
             $sidebarMenu->setFactoryMethod('createSidebarMenu');
         }
 
-        $configuration = new Configuration();
-        $processor = new Processor();
-        $config = $processor->processConfiguration($configuration, $configs);
+        $configuration = $this->getConfiguration($configs, $container);
+        $config = $this->processConfiguration($configuration, $configs);
 
         $config['options']['javascripts'] = $config['assets']['javascripts'];
         $config['options']['stylesheets'] = $config['assets']['stylesheets'];
@@ -93,10 +91,15 @@ BOOM
         $pool->replaceArgument(2, $config['title_logo']);
         $pool->replaceArgument(3, $config['options']);
 
+        if (false === $config['options']['lock_protection']) {
+            $container->removeDefinition('sonata.admin.lock.extension');
+        }
+
         $container->setParameter('sonata.admin.configuration.templates', $config['templates']);
         $container->setParameter('sonata.admin.configuration.admin_services', $config['admin_services']);
         $container->setParameter('sonata.admin.configuration.dashboard_groups', $config['dashboard']['groups']);
         $container->setParameter('sonata.admin.configuration.dashboard_blocks', $config['dashboard']['blocks']);
+        $container->setParameter('sonata.admin.configuration.sort_admins', $config['options']['sort_admins']);
 
         if (null === $config['security']['acl_user_manager'] && isset($bundles['FOSUserBundle'])) {
             $container->setParameter('sonata.admin.security.acl_user_manager', 'fos_user.user_manager');
@@ -110,24 +113,24 @@ BOOM
             case 'sonata.admin.security.handler.role':
                 if (count($config['security']['information']) === 0) {
                     $config['security']['information'] = array(
-                        'EDIT'      => array('EDIT'),
-                        'LIST'      => array('LIST'),
-                        'CREATE'    => array('CREATE'),
-                        'VIEW'      => array('VIEW'),
-                        'DELETE'    => array('DELETE'),
-                        'EXPORT'    => array('EXPORT'),
-                        'OPERATOR'  => array('OPERATOR'),
-                        'MASTER'    => array('MASTER'),
+                        'EDIT'     => array('EDIT'),
+                        'LIST'     => array('LIST'),
+                        'CREATE'   => array('CREATE'),
+                        'VIEW'     => array('VIEW'),
+                        'DELETE'   => array('DELETE'),
+                        'EXPORT'   => array('EXPORT'),
+                        'OPERATOR' => array('OPERATOR'),
+                        'MASTER'   => array('MASTER'),
                     );
                 }
                 break;
             case 'sonata.admin.security.handler.acl':
                 if (count($config['security']['information']) === 0) {
                     $config['security']['information'] = array(
-                        'GUEST'    => array('VIEW', 'LIST'),
-                        'STAFF'    => array('EDIT', 'LIST', 'CREATE'),
-                        'EDITOR'   => array('OPERATOR', 'EXPORT'),
-                        'ADMIN'    => array('MASTER'),
+                        'GUEST'  => array('VIEW', 'LIST'),
+                        'STAFF'  => array('EDIT', 'LIST', 'CREATE'),
+                        'EDITOR' => array('OPERATOR', 'EXPORT'),
+                        'ADMIN'  => array('MASTER'),
                     );
                 }
                 break;
@@ -171,6 +174,15 @@ BOOM
             'integer'  => '',
             'datetime' => 'sonata-medium-date',
             'date'     => 'sonata-medium-date',
+
+            // SF3+
+            'Symfony\Component\Form\Extension\Core\Type\ChoiceType'   => '',
+            'Symfony\Component\Form\Extension\Core\Type\DateType'     => 'sonata-medium-date',
+            'Symfony\Component\Form\Extension\Core\Type\DateTimeType' => 'sonata-medium-date',
+            'Symfony\Component\Form\Extension\Core\Type\EmailType'    => '',
+            'Symfony\Component\Form\Extension\Core\Type\IntegerType'  => '',
+            'Symfony\Component\Form\Extension\Core\Type\TextareaType' => '',
+            'Symfony\Component\Form\Extension\Core\Type\TextType'     => '',
         );
 
         $container->getDefinition('sonata.admin.form.extension.field')
@@ -225,7 +237,6 @@ BOOM
             'Sonata\\AdminBundle\\Filter\\FilterFactory',
             'Sonata\\AdminBundle\\Filter\\FilterFactoryInterface',
             'Sonata\\AdminBundle\\Filter\\FilterInterface',
-            'Sonata\\AdminBundle\\Form\\ChoiceList\\ModelChoiceList',
             'Sonata\\AdminBundle\\Form\\DataTransformer\\ArrayToModelTransformer',
             'Sonata\\AdminBundle\\Form\\DataTransformer\\ModelsToArrayTransformer',
             'Sonata\\AdminBundle\\Form\\DataTransformer\\ModelToIdTransformer',
@@ -280,7 +291,7 @@ BOOM
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getNamespace()
     {
